@@ -1,0 +1,19 @@
+{
+  "name": "soldout",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.5.0",
+    "dotenv": "^16.3.1",
+    "reconnecting-websocket": "^4.4.0",
+    "selfcore": "^1.1.1",
+    "tldts": "^6.0.14"
+  }
+}
