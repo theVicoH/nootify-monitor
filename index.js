@@ -23,46 +23,72 @@ gatewaySelfcore.on("message", async (m) => {
           await handleSpotifyEu2Msg(m);
           break;
         case channels.DUSTIFY_MESH_EU_CHANNEL_ID:
+          console.log(m, "DUSTIFY_MESH_EU_CHANNEL_ID")
           await handleMeshBackupMsg(m);
           break;
         case channels.DUSTIFY_MESH_UK_CHANNEL_ID:
+          console.log(m, "DUSTIFY_MESH_UK_CHANNEL_ID")
           await handleMeshBackupMsg(m);
           break;
         case channels.DUSTIFY_MESH_BE_CHANNEL_ID:
+          console.log(m, "DUSTIFY_MESH_BE_CHANNEL_ID")
           await handleMeshBackupMsg(m);
           break;
         case channels.DUSTIFY_MESH_AT_CHANNEL_ID:
+            console.log(m, "DUSTIFY_MESH_AT_CHANNEL_ID")
             await handleMeshBackupMsg(m);
             break;
         case channels.DUSTIFY_MESH_DE_CHANNEL_ID:
+          console.log(m, "DUSTIFY_MESH_DE_CHANNEL_ID")
           await handleMeshBackupMsg(m);
           break;
         case channels.DUSTIFY_MESH_DK_CHANNEL_ID:
+          console.log(m, "DUSTIFY_MESH_DK_CHANNEL_ID")
           await handleMeshBackupMsg(m);
           break;
         case channels.DUSTIFY_MESH_ES_CHANNEL_ID:
+          console.log(m, "DUSTIFY_MESH_ES_CHANNEL_ID")
           await handleMeshBackupMsg(m);
           break;
         case channels.DUSTIFY_MESH_FI_CHANNEL_ID:
+          console.log(m, "DUSTIFY_MESH_FI_CHANNEL_ID")
           await handleMeshBackupMsg(m);
           break;
         case channels.DUSTIFY_MESH_FR_CHANNEL_ID:
+          console.log(m, "DUSTIFY_MESH_FR_CHANNEL_ID")
           // TRINITY REQUEST
+          if (m.content && m.content.toLowerCase().includes("notif")) {
+            const embedDetails = await parseMessage(m);
+            await sendToTrinity(
+              embedDetails.pid,
+              embedDetails.price,
+              embedDetails.store,
+              embedDetails.thumbnail,
+              embedDetails.product_page,
+              embedDetails.sku,
+              embedDetails.sizes
+            );
+          }
           await handleMeshBackupMsg(m);
           break;
         case channels.DUSTIFY_MESH_IE_CHANNEL_ID:
+          console.log(m, "DUSTIFY_MESH_IE_CHANNEL_ID")
           await handleMeshBackupMsg(m);
           break;
         case channels.DUSTIFY_MESH_IT_CHANNEL_ID:
+          console.log(m, "DUSTIFY_MESH_IT_CHANNEL_ID")
           await handleMeshBackupMsg(m);
           break;
         case channels.DUSTIFY_MESH_NL_CHANNEL_ID:
+          console.log(m, "DUSTIFY_MESH_NL_CHANNEL_ID")
           await handleMeshBackupMsg(m);
           break;
         case channels.DUSTIFY_MESH_PT_CHANNEL_ID:
+          console.log(m, "DUSTIFY_MESH_PT_CHANNEL_ID")
           await handleMeshBackupMsg(m);
           break;
         case channels.DUSTIFY_MESH_SE_CHANNEL_ID:
+          console.log(m, "DUSTIFY_MESH_SE_CHANNEL_ID")
           await handleMeshBackupMsg(m);
           break;
         default:
