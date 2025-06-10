@@ -147,11 +147,11 @@ async function sendToTrinitySingle(
       return null;
     }
 
-    // console.log(
-    //     `Sending to trinity payload: ${JSON.stringify(
-    //       payload
-    //     )} from func arguments: pid:"${pid}" price:"${price}" store:"${store}" product_page:"${product_page}" sku:"${sku}" size:"${size}"`
-    // );
+    console.log(
+        `Sending to trinity payload: ${JSON.stringify(
+          payload
+        )} from func arguments: pid:"${pid}" price:"${price}" store:"${store}" product_page:"${product_page}" sku:"${sku}" size:"${size}"`
+    );
 
     profitRes = await checkIfWorthBuying(
       sku,
