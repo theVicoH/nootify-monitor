@@ -130,17 +130,14 @@ export async function handleCybersoleMsg(m) {
  * @param {Array<string>} sizes - Array of available sizes
  */
 async function sendToCybersole(productUrl, sizes) {
-  console.log('=== CYBERSOLE REQUEST START ===');
-  console.log('Product URL:', productUrl);
-  console.log('Available sizes:', sizes);
+  console.log('Sending cybersole requests for:', productUrl);
   
   if (!sizes || sizes.length === 0) {
-    console.log('❌ No sizes available for cybersole request');
+    console.log('No sizes available for cybersole request');
     return;
   }
 
   const cybersoleUrl = 'http://89.33.194.104:3000/process';
-  console.log('Cybersole endpoint:', cybersoleUrl);
   
   // Function to round sizes with .3 and .8
   function roundSize(size) {
@@ -150,12 +147,12 @@ async function sendToCybersole(productUrl, sizes) {
     if (sizeStr.includes('.3')) {
       // Round down for .3 (e.g., 8.3 -> 8)
       const rounded = Math.floor(parseFloat(sizeStr));
-      console.log(`📐 Rounding size ${size} down to ${rounded}`);
+      console.log(`Rounding size ${size} down to ${rounded}`);
       return rounded.toString();
     } else if (sizeStr.includes('.8')) {
       // Round up for .8 (e.g., 8.8 -> 9)
       const rounded = Math.ceil(parseFloat(sizeStr));
-      console.log(`📐 Rounding size ${size} up to ${rounded}`);
+      console.log(`Rounding size ${size} up to ${rounded}`);
       return rounded.toString();
     }
     
@@ -173,13 +170,8 @@ async function sendToCybersole(productUrl, sizes) {
         size: roundedSize
       };
 
-      console.log(`🚀 Sending cybersole request for size ${size} (rounded to ${roundedSize}):`);
-      console.log('Payload:', JSON.stringify(payload, null, 2));
-      console.log('Request URL:', cybersoleUrl);
-      console.log('Request method: POST');
-      console.log('Content-Type: application/json');
+      console.log(`Sending cybersole request for size ${size} (rounded to ${roundedSize})`);
 
-      const startTime = Date.now();
       const response = await fetch(cybersoleUrl, {
         method: 'POST',
         headers: {
@@ -187,38 +179,16 @@ async function sendToCybersole(productUrl, sizes) {
         },
         body: JSON.stringify(payload)
       });
-      const endTime = Date.now();
       
-      console.log(`⏱️ Request took ${endTime - startTime}ms`);
-      console.log(`📊 Response status: ${response.status} ${response.statusText}`);
-      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
-
       if (response.ok) {
-        const result = await response.text();
-        console.log(`✅ Cybersole request successful for size ${size} (rounded to ${roundedSize})`);
-        console.log('Response body:', result);
+        console.log(`Cybersole request successful for size ${roundedSize}`);
       } else {
-        const errorBody = await response.text();
-        console.error(`❌ Cybersole request failed for size ${size} (rounded to ${roundedSize}):`);
-        console.error('Status:', response.status, response.statusText);
-        console.error('Error body:', errorBody);
+        console.error(`Cybersole request failed for size ${roundedSize}: ${response.status} ${response.statusText}`);
       }
     } catch (error) {
-      console.error(`💥 Error sending cybersole request for size ${size}:`);
-      console.error('Error type:', error.constructor.name);
-      console.error('Error message:', error.message);
-      console.error('Full error:', error);
-      
-      if (error.code) {
-        console.error('Error code:', error.code);
-      }
-      if (error.errno) {
-        console.error('Error errno:', error.errno);
-      }
+      console.error(`Error sending cybersole request for size ${size}:`, error.message);
     }
   }
-  
-  console.log('=== CYBERSOLE REQUEST END ===');
 }
 
 /**
