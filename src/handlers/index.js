@@ -213,9 +213,6 @@ export async function handleSpotifyEu2Msg(m) {
   
   console.log(`Processing asphaltgold.com message ${m.id}`);
   
-  // Send original embed to webhook
-  await sendEmbedToWebhook(process.env.WEBHOOK_URL, embedMsg);
-
   // Try to get additional details, but handle the case where it fails
   let sku = null;
   let sizesAvailable = embedDetails?.sizes || [];
