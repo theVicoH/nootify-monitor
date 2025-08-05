@@ -147,11 +147,11 @@ async function sendToTrinitySingle(
       return null;
     }
 
-    // console.log(
-    //     `Sending to trinity payload: ${JSON.stringify(
-    //       payload
-    //     )} from func arguments: pid:"${pid}" price:"${price}" store:"${store}" product_page:"${product_page}" sku:"${sku}" size:"${size}"`
-    // );
+    console.log(
+        `Sending to trinity payload: ${JSON.stringify(
+          payload
+        )} from func arguments: pid:"${pid}" price:"${price}" store:"${store}" product_page:"${product_page}" sku:"${sku}" size:"${size}"`
+    );
 
     profitRes = await checkIfWorthBuying(
       sku,
@@ -452,4 +452,40 @@ function sendAPResultWebhook(
   }€. Prix d'origine : ${price}€. UUID de la session : ${uuid_session}`;
 
   SendAPResultWebhook(message, uuid_session);
+}
+
+export async function sendToTrinityForMesh(mainPid, size, storeName, url, name) {
+  try {
+    const payload = {
+      mainPid,
+      size: size || "random",
+      storeName,
+      url,
+      name
+    };
+
+    console.log(`Sending mesh request to Trinity: ${JSON.stringify(payload)}`);
+
+    const res = await fetch("http://89.33.194.104:3009/mesh/backend", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const responseText = await res.text();
+
+    console.log(`Trinity mesh response (${res.status}): ${responseText}`);
+
+    if (res.status !== 200) {
+      console.log(`Error sending mesh request to Trinity: ${res.status} :: ${responseText}`);
+      return null;
+    }
+
+    return responseText;
+  } catch (error) {
+    console.log("Error in sendMeshFrRequest:", error);
+    return null;
+  }
 }

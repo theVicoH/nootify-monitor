@@ -21,15 +21,15 @@ export async function checkIfWorthBuying(
   brand,
   size,
   gender,
-  size_metric_origin,
-  retail_price
+  sizeMetric,
+  price
 ) {
   try {
     console.log(`Checking if worth buying sku:"${sku}"...`);
 
-    if (!profitCheckerGuardClause(retail_price, sku)) {
+    if (!profitCheckerGuardClause(price, sku)) {
       console.log(
-        `Profit checker guard clause failed for sku:"${sku}" -- price:"${retail_price}".`
+        `Profit checker guard clause failed for sku:"${sku}" -- price:"${price}".`
       );
       return;
     }
@@ -43,8 +43,8 @@ export async function checkIfWorthBuying(
       size: size,
       brand: brand,
       gender: gender,
-      size_metric_origin: size_metric_origin,
-      retail_price: retail_price * 100,
+      size_metric_origin: sizeMetric,
+      retail_price: price * 100,
     };
 
     console.log(`Sending ${JSON.stringify(payload)} to ${urlWorthBuying}`);
@@ -63,8 +63,12 @@ export async function checkIfWorthBuying(
     console.log(`Profit checker response for ${sku}: ${JSON.stringify(json)}}`);
     return json;
   } catch (error) {
-    console.log(error);
-    return;
+    if (error.code === "ENOTFOUND") {
+      console.log(`Profit checker service unavailable: ${error.message}`);
+      return null; // ou un objet par défaut
+    }
+    console.log(`Profit checker error: ${error.message}`);
+    return null;
   }
 }
 

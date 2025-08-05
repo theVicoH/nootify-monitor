@@ -390,3 +390,24 @@ export function handleStore(store, country) {
       return `${store}${country}`.toLowerCase();
   }
 }
+
+export function getSiteFromProductPage(productPage) {
+  try {
+    if (!productPage || typeof productPage !== 'string') {
+      return null;
+    }
+    
+    const url = new URL(productPage);
+    const hostname = url.hostname;
+    
+    // Retourner null au lieu de "undefined" + suffixe
+    if (!hostname || hostname === 'undefined') {
+      return null;
+    }
+    
+    return hostname.replace('www.', '');
+  } catch (error) {
+    console.log(`Error parsing site from product page: ${error.message}`);
+    return null;
+  }
+}
