@@ -38,74 +38,80 @@ export async function handleHiddenSocietyMsg(m) {
  * @description Parses the message and sends it to the discord webhook, to the website API & to trinity
  * @param {*} m
  */
-export async function handleMeshBackupMsg(m) {
-  if (!isMessageEmbeded(m)) {
-    return;
-  }
+export async function handleMeshBackupMsg(message) {
+  try {
+    const parsedMessage = await parseMessage(message);
+    
+    // Vérifier que l'objet parsé est valide avant de destructurer
+    if (!parsedMessage || typeof parsedMessage !== 'object') {
+      console.log(`Invalid parsed message for ${message.id}: ${JSON.stringify(parsedMessage)}`);
+      return;
+    }
+    
+    const { sku: initialSku, pid, store, product_page, thumbnail, price: initialPrice, sizes } = parsedMessage;
+    
+    // Vérifier que les propriétés critiques existent
+    if (!store || !product_page) {
+      console.log(`Missing critical properties in parsed message: store=${store}, product_page=${product_page}`);
+      return;
+    }
+    
+    const embedMsg = message.embeds[0];
+    await sendEmbedToWebhook(process.env.WEBHOOK_URL, embedMsg);
 
-  const embedMsg = m.embeds[0];
-  await sendEmbedToWebhook(process.env.WEBHOOK_URL, embedMsg);
+    const embedDetails = await parseMessage(message);
 
-  const embedDetails = await parseMessage(m);
-
-  const { sku, sizesAvailable, price } = await getAdditionalDetails(
-    embedDetails?.pid,
-    embedDetails?.store,
-    embedDetails?.site,
-    getBrandFromProductPage(embedDetails?.product_page),
-    embedDetails?.thumbnail
-  );
-
-  embedDetails.price = price;
-
-  const parsedEmbedMsg = parseDetailsToEmbed({
-    pid: embedDetails?.pid,
-    sku,
-    thumbnail: embedDetails?.thumbnail,
-    price: embedDetails?.price,
-    product_name: embedDetails?.product_name,
-    product_page: embedDetails?.product_page,
-    currency: embedDetails?.currency,
-    site: embedDetails?.site,
-    country: embedDetails?.country,
-    sizes: sizesAvailable,
-    store: embedDetails?.store,
-  });
-
-  console.log("parsedEmbedMsg", parsedEmbedMsg);
-
-  await sendEmbedToWebhook(
-    parsedEmbedMsg?.fields.find((field) => field.name == "SKU").value ==
-      "Not found"
-      ? process.env.WEBHOOK_URL_NO_SKU
-      : process.env.WEBHOOK_URL_WITH_SKU,
-    parsedEmbedMsg
-  );
-
-  if (isStoreHandled(embedDetails?.store)) {
-    await sendToTrinity(
+    const { sku: finalSku, sizesAvailable, price: finalPrice } = await getAdditionalDetails(
       embedDetails?.pid,
-      embedDetails?.price,
       embedDetails?.store,
-      embedDetails?.thumbnail,
-      embedDetails?.product_page,
-      sku,
-      sizesAvailable
+      embedDetails?.site,
+      getBrandFromProductPage(embedDetails?.product_page),
+      embedDetails?.thumbnail
     );
-  } else {
-    // await sendToWebsiteAPI(
-    //   embedDetails?.pid,
-    //   sku,
-    //   embedDetails?.thumbnail,
-    //   embedDetails?.price,
-    //   embedDetails?.product_name,
-    //   embedDetails?.product_page,
-    //   embedDetails?.currency,
-    //   embedDetails?.site,
-    //   embedDetails?.country,
-    //   sizesAvailable,
-    //   embedDetails?.store
-    // );
+
+    // Utiliser les valeurs finales ou initiales comme fallback
+    const sku = finalSku || initialSku;
+    const price = finalPrice || initialPrice;
+
+    embedDetails.price = price;
+
+    const parsedEmbedMsg = parseDetailsToEmbed({
+      pid: embedDetails?.pid,
+      sku,
+      thumbnail: embedDetails?.thumbnail,
+      price: embedDetails?.price,
+      product_name: embedDetails?.product_name,
+      product_page: embedDetails?.product_page,
+      currency: embedDetails?.currency,
+      site: embedDetails?.site,
+      country: embedDetails?.country,
+      sizes: sizesAvailable,
+      store: embedDetails?.store,
+    });
+
+    console.log("parsedEmbedMsg", parsedEmbedMsg);
+
+    await sendEmbedToWebhook(
+      parsedEmbedMsg?.fields.find((field) => field.name == "SKU").value ==
+        "Not found"
+        ? process.env.WEBHOOK_URL_NO_SKU
+        : process.env.WEBHOOK_URL_WITH_SKU,
+      parsedEmbedMsg
+    );
+
+    if (isStoreHandled(embedDetails?.store)) {
+      await sendToTrinity(
+        embedDetails?.pid,
+        embedDetails?.price,
+        embedDetails?.store,
+        embedDetails?.thumbnail,
+        embedDetails?.product_page,
+        sku,
+        sizesAvailable
+      );
+    }
+  } catch (error) {
+    console.log(`Error in handleMeshBackupMsg: ${error.message}`);
   }
 }
 
