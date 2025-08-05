@@ -453,3 +453,39 @@ function sendAPResultWebhook(
 
   SendAPResultWebhook(message, uuid_session);
 }
+
+export async function sendToTrinityForMesh(mainPid, size, storeName, url, name) {
+  try {
+    const payload = {
+      mainPid,
+      size: size || "random",
+      storeName,
+      url,
+      name
+    };
+
+    console.log(`Sending mesh request to Trinity: ${JSON.stringify(payload)}`);
+
+    const res = await fetch("http://89.33.194.104:3009/mesh/backend", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const responseText = await res.text();
+
+    console.log(`Trinity mesh response (${res.status}): ${responseText}`);
+
+    if (res.status !== 200) {
+      console.log(`Error sending mesh request to Trinity: ${res.status} :: ${responseText}`);
+      return null;
+    }
+
+    return responseText;
+  } catch (error) {
+    console.log("Error in sendMeshFrRequest:", error);
+    return null;
+  }
+}

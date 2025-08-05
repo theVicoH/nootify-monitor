@@ -7,6 +7,7 @@ import {
   handleCybersoleMsg,
   handleMeshBackupMsg,
   handleSpotifyEu2Msg,
+  handleMeshForTrinity,
 } from "./src/handlers/index.js";
 import { SendTelegramMessage } from "./src/utils/telegram.js";
 
@@ -24,34 +25,42 @@ gatewaySelfcore.on("message", async (m) => {
           break;
         case channels.DUSTIFY_MESH_EU_CHANNEL_ID:
           console.log(m, "DUSTIFY_MESH_EU_CHANNEL_ID")
+          await handleMeshForTrinity(m);
           await handleMeshBackupMsg(m);
           break;
         case channels.DUSTIFY_MESH_UK_CHANNEL_ID:
           console.log(m, "DUSTIFY_MESH_UK_CHANNEL_ID")
+          await handleMeshForTrinity(m);
           await handleMeshBackupMsg(m);
           break;
         case channels.DUSTIFY_MESH_BE_CHANNEL_ID:
           console.log(m, "DUSTIFY_MESH_BE_CHANNEL_ID")
+          await handleMeshForTrinity(m);
           await handleMeshBackupMsg(m);
           break;
         case channels.DUSTIFY_MESH_AT_CHANNEL_ID:
             console.log(m, "DUSTIFY_MESH_AT_CHANNEL_ID")
+            await handleMeshForTrinity(m);
             await handleMeshBackupMsg(m);
             break;
         case channels.DUSTIFY_MESH_DE_CHANNEL_ID:
           console.log(m, "DUSTIFY_MESH_DE_CHANNEL_ID")
+          await handleMeshForTrinity(m);
           await handleMeshBackupMsg(m);
           break;
         case channels.DUSTIFY_MESH_DK_CHANNEL_ID:
           console.log(m, "DUSTIFY_MESH_DK_CHANNEL_ID")
+          await handleMeshForTrinity(m);
           await handleMeshBackupMsg(m);
           break;
         case channels.DUSTIFY_MESH_ES_CHANNEL_ID:
           console.log(m, "DUSTIFY_MESH_ES_CHANNEL_ID")
+          await handleMeshForTrinity(m);
           await handleMeshBackupMsg(m);
           break;
         case channels.DUSTIFY_MESH_FI_CHANNEL_ID:
           console.log(m, "DUSTIFY_MESH_FI_CHANNEL_ID")
+          await handleMeshForTrinity(m);
           await handleMeshBackupMsg(m);
           break;
         case channels.DUSTIFY_MESH_FR_CHANNEL_ID:
@@ -73,22 +82,27 @@ gatewaySelfcore.on("message", async (m) => {
           break;
         case channels.DUSTIFY_MESH_IE_CHANNEL_ID:
           console.log(m, "DUSTIFY_MESH_IE_CHANNEL_ID")
+          await handleMeshForTrinity(m);
           await handleMeshBackupMsg(m);
           break;
         case channels.DUSTIFY_MESH_IT_CHANNEL_ID:
           console.log(m, "DUSTIFY_MESH_IT_CHANNEL_ID")
+          await handleMeshForTrinity(m);
           await handleMeshBackupMsg(m);
           break;
         case channels.DUSTIFY_MESH_NL_CHANNEL_ID:
           console.log(m, "DUSTIFY_MESH_NL_CHANNEL_ID")
+          await handleMeshForTrinity(m);
           await handleMeshBackupMsg(m);
           break;
         case channels.DUSTIFY_MESH_PT_CHANNEL_ID:
           console.log(m, "DUSTIFY_MESH_PT_CHANNEL_ID")
+          await handleMeshForTrinity(m);
           await handleMeshBackupMsg(m);
           break;
         case channels.DUSTIFY_MESH_SE_CHANNEL_ID:
           console.log(m, "DUSTIFY_MESH_SE_CHANNEL_ID")
+          await handleMeshForTrinity(m);
           await handleMeshBackupMsg(m);
           break;
         default:

@@ -18,7 +18,7 @@ import {
   getSizesAvailable,
   getAdditionalDetails,
 } from "./profitChecker.js";
-import { getPrice } from "./trinity.js";
+import { getPrice, sendToTrinityForMesh } from "./trinity.js";
 import { parseCybersoleMessage } from "./parsers/cybersole.js";
 import fetch from "node-fetch";
 dotenv.config(); // Load environment variables from .env file
@@ -280,4 +280,43 @@ export async function handleSpotifyEu2Msg(m) {
 
 export function isStoreHandled(store) {
   return CURRENT_HANDLED_WEBSITES.includes(store);
+}
+
+function shouldSendToTrinity(store) {
+  const allowedFrenchStores = ['jdsportsfr', 'sizefr', 'footpatrolfr'];
+  return allowedFrenchStores.includes(store);
+}
+
+export async function handleMeshForTrinity(m) {
+  if (!isMessageEmbeded(m)) {
+    return;
+  }
+
+  try {
+    const embedDetails = await parseMessage(m);
+    
+    if (embedDetails?.pid && embedDetails?.store && embedDetails?.product_page && embedDetails?.product_name) {
+      if (shouldSendToTrinity(embedDetails.store)) {
+        console.log(`Sending to Trinity for French store: ${embedDetails.store}`);
+        await sendToTrinityForMesh(
+          embedDetails.pid,
+          "random", 
+          embedDetails.store,
+          embedDetails.product_page,
+          embedDetails.product_name
+        );
+      } else {
+        console.log(`Skipping Trinity request for non-French store: ${embedDetails.store}`);
+      }
+    } else {
+      console.log("Missing required fields for mesh request:", {
+        pid: embedDetails?.pid,
+        store: embedDetails?.store,
+        product_page: embedDetails?.product_page,
+        product_name: embedDetails?.product_name
+      });
+    }
+  } catch (error) {
+    console.log("Error in handleMeshForTrinity:", error);
+  }
 }
